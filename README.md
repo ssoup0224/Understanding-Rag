@@ -34,31 +34,16 @@ This project demonstrates a basic Retrieval-Augmented Generation (RAG) pipeline 
     OPENAI_API_KEY=your_openai_api_key_here
     ```
 
-## Usage
+## Function Reference (`1_ingestion_pipeline.py`)
 
-### Ingestion
+Run the script to ingest documents:
+```bash
+python 1_ingestion_pipeline.py
+```
 
-To process documents and build the vector database:
-1.  Place your `.txt` documents in the `docs/` directory.
-2.  Run the ingestion script:
-    ```bash
-    python ingestion_pipeline.py
-    ```
-    This script will:
-    - Load documents from `docs/`.
-    - Split them into chunks of 800 characters.
-    - Create embeddings and save them to `db/chroma_db`.
-
-### Retrieval
-
-To query the database:
-1.  Run the retrieval script:
-    ```bash
-    python retrieval_pipeline.py
-    ```
-    (Note: Modify the `query` variable in `retrieval_pipeline.py` to change the search query.)
-
-## Function Reference (`ingestion_pipeline.py`)
+- Loads text documents from the `docs/` directory.
+- Splits documents into smaller chunks.
+- Creates embeddings and persists them to the Chroma vector database.
 
 ### `load_documents(docs_path)`
 
@@ -146,7 +131,16 @@ Creating embeddings and storing in Chroma vector database...
 Vector store created and persisted at db/chroma_db
 ```
 
-## Function Reference (`retrieval_pipeline.py`)
+## Function Reference (`2_retrieval_pipeline.py`)
+
+Run the script to retrieve relevant documents:
+```bash
+python 2_retrieval_pipeline.py
+```
+
+- Loads the persisted vector database.
+- Retrieves the most relevant document chunks for a given query.
+- Prints the content of the retrieved chunks.
 
 **Example:**
 ```python
@@ -191,4 +185,62 @@ Canaveral and Kennedy enable orbits of medium inclination
 possible from Florida by overflying Cuba.[240] Falcon Heavy Side Boosters landing on
 
 LZ1 and LZ2 at Cape Canaveral
+```
+
+## Function Reference (`3_answer_generation.py`)
+
+Run the script to generate answers using RAG:
+```bash
+python 3_answer_generation.py
+```
+
+- Retrieves relevant documents for a query.
+- Constructs a prompt combining the query and retrieved context.
+- Sends the prompt to the language model (GPT-4o) to generate a natural language answer.
+
+**Example:**
+```python
+User Query: What was Microsoft's first hardware product release?
+
+--- Model Response ---
+Microsoft's first hardware product release was the Microsoft Mouse in 1983.
+```
+
+
+## Function Reference (`4_history_generation.py`)
+
+Run the script to start an interactive chat session:
+```bash
+python 4_history_generation.py
+```
+
+- Maintains a chat history and rewrites new queries to be standalone based on the history.
+- Retrieves relevant documents for the rewritten query.
+- Answers using the retrieved context.
+
+**Example:**
+```python
+Ask question, and type 'exit' to quit.
+Enter question: What was Microsoft's first hardware product release?
+
+User Query: What was Microsoft's first hardware product release?
+
+Found 5 relevant documents:
+Document 1 Preview:
+1985–1994: Windows and Office
+Microsoft released Windows 1.0 on November 20, 1985, as a
+graphical extension for MS-DOS,[10]: 242–243, 246  despite
+...
+Document 5 Preview:
+Microsoft has been market-dominant in the IBM PC– Brad Smith (vice chairman &
+compatible operating system market and the office president)
+software suite market since the 1990s. Its best-known Bill Gates (technical adviser)
+
+Answer: Microsoft's first hardware product release was the Microsoft Mouse in 1983.
+Enter question: Where was it released?
+
+User Query: Where was it released?
+
+Searching for: Where was the Microsoft Mouse first released?
+...
 ```
