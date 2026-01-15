@@ -28,13 +28,13 @@ def load_documents(docs_path):
   if len(documents) == 0:
     raise FileNotFoundError(f"No text files found in directory {docs_path}.")
   
-  # Print first 2 documents for verification
-  for i, doc in enumerate(documents[:2]): 
-    print(f"\nDocument {i+1}: ")
-    print(f"Source: {doc.metadata['source']} ")
-    print(f"Content length: {len(doc.page_content)} characters ")
-    print(f"Content preview: {doc.page_content[:100]}... ") 
-    print(f"metadata: {doc.metadata}")
+  # # Print first 2 documents for verification
+  # for i, doc in enumerate(documents[:2]): 
+  #   print(f"\nDocument {i+1}: ")
+  #   print(f"Source: {doc.metadata['source']} ")
+  #   print(f"Content length: {len(doc.page_content)} characters ")
+  #   print(f"Content preview: {doc.page_content[:100]}... ") 
+  #   print(f"metadata: {doc.metadata}")
     
   return documents
 
@@ -53,18 +53,18 @@ def split_documents(documents, chunk_size=800, chunk_overlap=0):
   
   print(f"Total chunks created: {len(chunks)}")
   
-  # Print first 5 chunks for verification
-  if chunks:
-    for i, chunk in enumerate(chunks[:5]):
-      print(f"\n--- Chunk {i+1} ---")
-      print(f"Source: {chunk.metadata['source']} ")
-      print(f"Length: {len(chunk.page_content)} characters ")
-      print(f"Content: ")
-      print(chunk.page_content)
-      print("-"*20)
+  # # Print first 5 chunks for verification
+  # if chunks:
+  #   for i, chunk in enumerate(chunks[:5]):
+  #     print(f"\n--- Chunk {i+1} ---")
+  #     print(f"Source: {chunk.metadata['source']} ")
+  #     print(f"Length: {len(chunk.page_content)} characters ")
+  #     print(f"Content: ")
+  #     print(chunk.page_content)
+  #     print("-"*20)
       
-      if len(chunks) > 5:
-        print(f"\n... and {len(chunks) - 5} more chunks.")
+  #     if len(chunks) > 5:
+  #       print(f"\n... and {len(chunks) - 5} more chunks.")
     
   return chunks
 
