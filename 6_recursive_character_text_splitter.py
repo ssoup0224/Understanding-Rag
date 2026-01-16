@@ -1,5 +1,6 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+# Example text
 tesla_text = """Tesla's Q3 Results
 
 Tesla reported record revenue of $25.2B in Q3 2024.
@@ -16,10 +17,11 @@ This is one very long paragraph that definitely exceeds our 100 character limit 
 
 recursive_splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", ". ", " ", ""],  # Multiple separators
-    chunk_size=100,
-    chunk_overlap=0
+    chunk_size=100, # Maximum size of each chunk
+    chunk_overlap=0 # No overlap between chunks
 )
 
+# Split the text into chunks
 chunks2 = recursive_splitter.split_text(tesla_text)
 print(f"Same problem text, but with RecursiveCharacterTextSplitter:")
 for i, chunk in enumerate(chunks2, 1):

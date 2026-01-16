@@ -1,5 +1,6 @@
 from langchain_text_splitters import CharacterTextSplitter
 
+# Example text
 tesla_text = """Tesla's Q3 Results
 
 Tesla reported record revenue of $25.2B in Q3 2024.
@@ -16,13 +17,14 @@ This is one very long paragraph that definitely exceeds our 100 character limit 
 
 
 splitter1 = CharacterTextSplitter(
-    chunk_size=100,
-    chunk_overlap=0,
+    chunk_size=100, # Maximum size of each chunk
+    chunk_overlap=0, # No overlap between chunks
     separator=" ",  # Other options include ["\n\n", "\n", ". ", " ", ""]
 )
 
+# Split the text into chunks
 chunks1 = splitter1.split_text(tesla_text)
-for i, chunk in enumerate(chunks1, 1):
+for i, chunk in enumerate(chunks1, 1): 
     print(f"Chunk {i}: ({len(chunk)} chars)")
     print(f'"{chunk}"')
     print()
