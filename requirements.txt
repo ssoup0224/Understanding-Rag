@@ -3,3 +3,4 @@ langchain-text-splitters
 langchain-openai
 langchain-chroma
 python-dotenv
+langchain-experimental
