@@ -56,5 +56,5 @@ for chunk in chunks:
 
 # Print the resulting chunks
 for i, chunk in enumerate(clean_chunks):
-  print(f"Chunk {i}: ({len(chunk)} chars)")
-  print(f"{chunk}\n")
+    print(f"Chunk {i}: ({len(chunk)} chars)")
+    print(f"{chunk}\n")
