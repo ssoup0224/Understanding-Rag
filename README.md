@@ -579,3 +579,35 @@ python 10_retrieval_methods.py
     are about the past issues that have been resolved".[59] 2007 also saw the creation of a multi-core unit at
     Microsoft, following the steps of server companies such as Sun and IBM.[60]
     ```
+
+## Function Reference (`11_multi_query_retrieval.py`)
+
+Demonstrates how to improve retrieval quality by generating multiple search queries from a single user question.
+
+```bash
+python 11_multi_query_retrieval.py
+```
+
+### Mechanism
+
+1.  **Query Generation**: Uses an LLM (GPT-4o) to generate 3 different variations of the original user query.
+2.  **Multi-Search**: Performs a separate vector search for *each* generated variation.
+3.  **Result Aggregation**: Collects unique documents from all search results (in this script, results are printed per query to show the difference).
+
+**Why this matters**: Different phrasings of the same question might return different documents due to how embeddings work. searching multiple angles increases the chance of finding the "correct" context that might have been missed by a single query.
+
+**Example**:
+```python
+Original Query: How does Tesla make money?
+
+Generated Query Variations:
+1. What are Tesla's primary revenue streams?
+2. Can you explain Tesla's business model and income sources?
+3. How does Tesla generate profit from its operations?
+
+=== RESULTS FOR QUERY 1: What are Tesla's primary revenue streams? ===
+Retrieved 5 documents...
+
+=== RESULTS FOR QUERY 2: Can you explain Tesla's business model and income sources? ===
+Retrieved 5 documents...
+```
