@@ -469,3 +469,113 @@ Vector store created and saved to dbv2/chroma_db
 Pipeline completed successfully!
 The Transformer uses 8 attention heads, and the dimension of each head is 64.
 ```
+
+## Function Reference (`10_retrieval_methods.py`)
+
+Demonstrates various retrieval techniques using ChromaDB and LangChain.
+
+```bash
+python 10_retrieval_methods.py
+```
+
+### Retrieval Methods Demonstrated:
+
+1.  **Similarity Search (`k=3`)**:
+    - Standard retrieval based on cosine similarity.
+    - Returns the `k` most similar documents.
+
+    **Example:**
+    ```python
+    Query: How much did Microsoft pay to acquire GitHub?
+
+    === METHOD 1: Similarity Search (k=3) ===
+    Retrieved 3 documents:
+
+    Document 1:
+    119. "Microsoft completes GitHub acquisition" (https://web.archive.org/web/20190112212059/http
+    s://www.msn.com/en-us/news/technology/microsoft-completes-github-acquisition/ar-BBOVV
+    OT). www.msn.com. Archived from the original (https://www.msn.com/en-us/news/technolog
+    y/microsoft-completes-github-acquisition/ar-BBOVVOT) on January 12, 2019. Retrieved
+    April 10, 2019.
+
+    Document 2:
+    117. "Microsoft's 2018, part 1: Open source, wobbly Windows and everyone's going to the cloud"
+    (https://www.theregister.co.uk/2018/12/25/microsoft_year_in_review_2018/). The Register.
+    Archived (https://web.archive.org/web/20190103060059/https://www.theregister.co.uk/2018/
+    12/25/microsoft_year_in_review_2018/) from the original on January 3, 2019. Retrieved
+    January 3, 2019.
+
+    118. "Microsoft to acquire GitHub for $7.5 billion" (https://news.microsoft.com/2018/06/04/microso
+    ft-to-acquire-github-for-7-5-billion/). Microsoft. June 4, 2018. Archived (https://web.archive.or
+    g/web/20180604142244/https://news.microsoft.com/2018/06/04/microsoft-to-acquire-github-
+    for-7-5-billion/) from the original on June 4, 2018.
+
+    Document 3:
+    In April 2018, Microsoft released the source code for Windows File Manager under the MIT License to
+    celebrate the program's 20th anniversary. In April the company further expressed willingness to embrace
+    open source initiatives by announcing Azure Sphere as its own derivative of the Linux operating
+    ...
+    ```
+
+2.  **Similarity Search with Threshold**:
+    - Sets a minimum `score_threshold` (e.g., 0.3).
+    - Filters out low-relevance documents.
+
+    **Example:**
+    ```python
+    === METHOD 2: Similarity with Score Threshold ===
+    Retrieved 3 documents (threshold: 0.3):
+
+    Document 1:
+    119. "Microsoft completes GitHub acquisition" (https://web.archive.org/web/20190112212059/http
+    s://www.msn.com/en-us/news/technology/microsoft-completes-github-acquisition/ar-BBOVV
+    OT). www.msn.com. Archived from the original (https://www.msn.com/en-us/news/technolog
+    y/microsoft-completes-github-acquisition/ar-BBOVVOT) on January 12, 2019. Retrieved
+    April 10, 2019.
+
+    Document 2:
+    117. "Microsoft's 2018, part 1: Open source, wobbly Windows and everyone's going to the cloud"
+    ...
+
+    118. "Microsoft to acquire GitHub for $7.5 billion" 
+    ...
+
+    Document 3:
+    In April 2018, Microsoft released the source code for Windows File Manager under the MIT License to
+    celebrate the program's 20th anniversary. In April the company further expressed willingness to embrace
+    open source initiatives by announcing Azure Sphere as its own derivative of the Linux operating
+    system.
+    ...
+    ```
+
+3.  **Maximum Marginal Relevance (MMR)**:
+    - Balances **Relevance** (similarity to query) and **Diversity** (dissimilarity among results).
+    - `fetch_k`: Initial pool of documents.
+    - `lambda_mult`: Controls trade-off (0=Max Diversity, 1=Max Relevance).
+
+    **Example:**
+    ```python
+    === METHOD 3: Maximum Marginal Relevance (MMR) ===
+    Retrieved 3 documents (λ=0.5):
+
+    Document 1:
+    119. "Microsoft completes GitHub acquisition" (https://web.archive.org/web/20190112212059/http
+    s://www.msn.com/en-us/news/technology/microsoft-completes-github-acquisition/ar-BBOVV
+    OT). www.msn.com. Archived from the original (https://www.msn.com/en-us/news/technolog
+    y/microsoft-completes-github-acquisition/ar-BBOVVOT) on January 12, 2019. Retrieved
+    April 10, 2019.
+
+    Document 2:
+    In April 2018, Microsoft released the source code for Windows File Manager under the MIT License to
+    celebrate the program's 20th anniversary. In April the company further expressed willingness to embrace
+    open source initiatives by announcing Azure Sphere as its own derivative of the Linux operating
+    system.
+    ...
+
+    Document 3:
+    €899  million ($1.4  billion) for Microsoft's lack of compliance with the March 2004 judgment on
+    February 27, 2008, saying that the company charged rivals unreasonable prices for key information about
+    its workgroup and backoffice servers.[58] Microsoft stated that it was in compliance and that "these fines
+    are about the past issues that have been resolved".[59] 2007 also saw the creation of a multi-core unit at
+    Microsoft, following the steps of server companies such as Sun and IBM.[60]
+    ```
