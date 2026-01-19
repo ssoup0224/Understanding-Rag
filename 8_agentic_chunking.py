@@ -42,7 +42,7 @@ Return the text with <<<SPLIT>>> markers where you want to split:
 print("Asking the LLM to chunk the text...")
 response = llm.invoke(prompt)
 # Get the response text
-response_text = response.content
+response_text = str(response.content)
 
 # Split the response into chunks at markers
 chunks = response_text.split("<<<SPLIT>>>")

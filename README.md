@@ -244,3 +244,228 @@ User Query: Where was it released?
 Searching for: Where was the Microsoft Mouse first released?
 ...
 ```
+
+## Function Reference (`5_character_text_splitter.py`)
+
+Demonstrates basic text splitting using a fixed character count.
+
+```bash
+python 5_character_text_splitter.py
+```
+
+- **Usage**: Good for simple splitting where context preservation isn't critical.
+- **Key Class**: `CharacterTextSplitter` from `langchain_text_splitters`.
+- **Mechanism**: Splits text based on a single separator (e.g., " ") and a maximum chunk size.
+
+**Example:**
+```python
+Chunk 1: (97 chars)
+"Tesla's Q3 Results
+
+Tesla reported record revenue of $25.2B in Q3 2024.
+
+Model Y Performance
+
+The"
+
+Chunk 2: (86 chars)
+"Model Y became the best-selling vehicle globally, with 350,000 units sold.
+
+Production"
+
+Chunk 3: (97 chars)
+"Challenges
+
+Supply chain issues caused a 12% increase in production costs.
+
+This is one very long"
+
+Chunk 4: (94 chars)
+"paragraph that definitely exceeds our 100 character limit and has no double newlines inside it"
+
+Chunk 5: (50 chars)
+"whatsoever making it impossible to split properly."
+```
+
+## Function Reference (`6_recursive_character_text_splitter.py`)
+
+Demonstrates smarter text splitting that tries to keep related text together.
+
+```bash
+python 6_recursive_character_text_splitter.py
+```
+
+- **Usage**: Recommended for most text document tasks.
+- **Key Class**: `RecursiveCharacterTextSplitter`.
+- **Mechanism**: Recursively tries different separators (paragraphs `\n\n`, newlines `\n`, spaces ` `) to find the best place to split while keeping chunks under the size limit.
+
+**Example:**
+```python
+Same problem text, but with RecursiveCharacterTextSplitter:
+Chunk 1: (92 chars)
+"Tesla's Q3 Results
+
+Tesla reported record revenue of $25.2B in Q3 2024.
+
+Model Y Performance"
+
+Chunk 2: (78 chars)
+"The Model Y became the best-selling vehicle globally, with 350,000 units sold."
+
+Chunk 3: (85 chars)
+"Production Challenges
+
+Supply chain issues caused a 12% increase in production costs."
+
+Chunk 4: (97 chars)
+"This is one very long paragraph that definitely exceeds our 100 character limit and has no double"
+
+Chunk 5: (69 chars)
+"newlines inside it whatsoever making it impossible to split properly."
+```
+
+## Function Reference (`7_semantic_chunker.py`)
+
+Demonstrates splitting text based on semantic meaning rather than just character counts.
+
+```bash
+python 7_semantic_chunker.py
+```
+
+- **Usage**: Best for splitting deeply semantic text where topic boundaries vary in length.
+- **Key Class**: `SemanticChunker` from `langchain_experimental.text_splitter`.
+- **Mechanism**: Uses embeddings (OpenAIEmbeddings) to calculate similarity between sentences. Splits when there is a significant change in semantic meaning (topic shift).
+
+**Example:**
+```python
+SEMANTIC CHUNKING RESULTS:
+==================================================
+Chunk 1: (120 chars)
+"Tesla's Q3 Results
+Tesla reported record revenue of $25.2B in Q3 2024. The company exceeded analyst expectations by 15%."
+
+Chunk 2: (363 chars)
+"Revenue growth was driven by strong vehicle deliveries. Model Y Performance  
+The Model Y became the best-selling vehicle globally, with 350,000 units sold. Customer satisfaction ratings reached an all-time high of 96%. Model Y now represents 60% of Tesla's total vehicle sales. Production Challenges
+Supply chain issues caused a 12% increase in production costs."
+
+Chunk 3: (48 chars)
+"Tesla is working to diversify its supplier base."
+
+Chunk 4: (67 chars)
+"New manufacturing techniques are being implemented to reduce costs."
+```
+
+## Function Reference (`8_agentic_chunking.py`)
+
+Demonstrates using an LLM (Agent) to intelligently determine chunk boundaries.
+
+```bash
+python 8_agentic_chunking.py
+```
+
+- **Usage**: High-precision chunking where logical coherence is paramount.
+- **Key Class**: Custom logic using `ChatOpenAI`.
+- **Mechanism**: Feeds the text to an LLM with a prompt asking it to identify logical split points (e.g., inserting `<<<SPLIT>>>` markers).
+
+**Example:**
+```python
+Asking the LLM to chunk the text...
+Chunk 0: (178 chars)
+Tesla's Q3 Results  
+Tesla reported record revenue of $25.2B in Q3 2024. The company exceeded analyst expectations by 15%. Revenue growth was driven by strong vehicle deliveries.
+
+Chunk 1: (222 chars)
+Model Y Performance  
+The Model Y became the best-selling vehicle globally, with 350,000 units sold. Customer satisfaction ratings reached an all-time high of 96%. Model Y now represents 60% of Tesla's total vehicle sales.
+
+Chunk 2: (203 chars)
+Production Challenges  
+Supply chain issues caused a 12% increase in production costs. Tesla is working to diversify its supplier base. New manufacturing techniques are being implemented to reduce costs.
+```
+
+## Function Reference (`9_multi_modal_rag.py`)
+
+A comprehensive Multi-Modal RAG pipeline capable of processing PDFs containing text, images, and tables.
+
+> **Note**: Requires additional system dependencies: `brew install poppler tesseract libmagic`.
+
+```bash
+python 9_multi_modal_rag.py
+```
+
+### Key Features:
+1.  **PDF Ingestion**: Uses `unstructured` to parse high-resolution PDFs.
+2.  **Multi-Modal Extraction**: enhancing:
+    - **Text**: Extracted as standard text.
+    - **Tables**: Extracted as HTML to preserve structure.
+    - **Images**: Extracted as Base64 encoded strings.
+3.  **AI-Enhanced Summarization**:
+    - Each chunk containing images or tables is passed to GPT-4o-Vision.
+    - The model generates a comprehensive text summary of the visual data.
+    - This summary is what gets embedded for retrieval.
+4.  **Multi-Modal Generation**:
+    - When a user asks a question, the original images/tables are retrieved along with the text.
+    - The final answer generation uses GPT-4o-Vision to "see" the retrieved charts/images and "read" the tables to provide a complete answer.
+
+### Workflow steps in script:
+1.  **Partition**: Extract raw elements (Text, Table, Image) from PDF.
+2.  **Chunk**: Group elements intelligently by title.
+3.  **Summarize**: Generate text descriptions for non-text elements (images/tables).
+4.  **Vector Store**: Embed and store the summaries in ChromaDB.
+5.  **Retrieval & Answer**: Retrieve relevant chunks + original images, pass to LLM for final answer.
+
+**Example:**
+```python
+Starting RAG Ingestion Pipeline
+==================================================
+Partitioning ./docs/attention-is-all-you-need.pdf...
+Warning: No languages specified, defaulting to English.
+The `max_size` parameter is deprecated and will be removed in v4.26. Please specify in `size['longest_edge'] instead`.
+Extracted 220 elements
+🔨 Creating smart chunks...
+Created 25 chunks
+Processing chunks with AI Summaries...
+   Processing chunk 1/25
+     Types found: ['text']
+     Tables: 0, Images: 0
+     → Using raw text (no tables/images)
+   ...
+   Processing chunk 5/25
+     Types found: ['image', 'text']
+     Tables: 0, Images: 1
+     → Creating AI summary for mixed content...
+     → AI summary created successfully
+     → Enhanced content preview: **SEARCHABLE DESCRIPTION:**
+
+**Key Facts and Data Points:**
+- The document discusses neural sequence transduction models, specifically focusing on the encoder-decoder structure.
+- The encoder maps an ...
+   Processing chunk 6/25
+     Types found: ['text']
+     Tables: 0, Images: 0
+     → Using raw text (no tables/images)
+   Processing chunk 7/25
+     Types found: ['image', 'text']
+     Tables: 0, Images: 2
+     → Creating AI summary for mixed content...
+     → AI summary created successfully
+     → Enhanced content preview: **SEARCHABLE DESCRIPTION:**
+   ...
+   Processing chunk 25/25
+     Types found: ['image', 'text']
+     Tables: 0, Images: 4
+     → Creating AI summary for mixed content...
+     → AI summary created successfully
+     → Enhanced content preview: **Searchable Description:**
+
+1. **Key Facts, Numbers, and Data Points:**
+   - The document discusses attention mechanisms in neural networks, specifically focusing on encoder self-attention in layer 5...
+Processed 25 chunks
+Creating embeddings and storing in ChromaDB...
+--- Creating vector store ---
+--- Finished creating vector store ---
+Vector store created and saved to dbv2/chroma_db
+Pipeline completed successfully!
+The Transformer uses 8 attention heads, and the dimension of each head is 64.
+```
