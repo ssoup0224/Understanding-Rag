@@ -159,7 +159,7 @@ def create_ai_enhanced_summary(text: str, tables: List[str], images: List[str]) 
         return summary
 
 # Step 3: Create AI-enhanced summary for chunks with mixed content and convert to LangChain Documents
-def summarise_chunks(chunks):
+def summarize_chunks(chunks):
     """Process all chunks with AI Summaries"""
     print("Processing chunks with AI Summaries...")
     
@@ -232,5 +232,5 @@ if __name__ == "__main__":
     # print(chunks[0].to_dict())  # Print first chunk details
     # print(chunks[4].metadata.orig_elements) # View original elements associated with the chunk
     # Note: 4th chunk has the first image + 11th chunk has the first table in the sample PDF
-    processed_chunks = summarise_chunks(chunks) # Process chunks to create AI-enhanced summaries
+    processed_chunks = summarize_chunks(chunks) # Process chunks to create AI-enhanced summaries
     # print(processed_chunks) # Print the LangChain Documents created
